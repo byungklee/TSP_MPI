@@ -58,98 +58,14 @@ void Tsp::copyMap(int **curr, int **child)
 
 void Tsp::run()
 {
-	/*
+	int ran = 0;
+	while(_pq->empty() != true)
+	{
+		ran++;
 		Node* currentNode = _pq->top();
 		_pq->pop();
-
-		cout<< currentNode->map[0][0] << " " << currentNode->map[0][1] <<  endl;
-				Node *leftNode = new Node;
-				leftNode->map = new int*[length];
-				for(int i = 0; i < length; i++)
-						leftNode->map[i] = new int[length];
-
-
-				Node *rightNode = new Node;	
-				rightNode->map = new int*[length];
-				for(int i = 0; i < length; i++)
-						rightNode->map[i] = new int[length];			
-				
-				//load their map conditions
-				//int[][] leftMap = leftNode.getMap();
-				//int[][] rightMap = rightNode.getMap();
-				copyMap(currentNode->map, leftNode->map);
-				copyMap(currentNode->map, rightNode->map);
-
-				cout<< rightNode->map[0][0] << " " << rightNode->map[0][1] <<  endl;				
-
-				rightNode->map[0][1] = -1;
-				rightNode->map[1][0] = -1;
-				verify(rightNode->map);
-				cout<< rightNode->map[1][0] << " " << rightNode->map[0][1] <<  endl;
-				leftNode->map[0][1] = 1;
-				leftNode->map[1][0] = 1;
-				verify(leftNode->map);
-				cout<< "left " << leftNode->map[5][0] << " " << leftNode->map[0][5] <<  endl;
-				//cout << isFinal(leftNode->map) << endl;
-				leftNode->hValue = hFunc(leftNode->map);
-				rightNode->hValue = hFunc(rightNode->map);
-
-				cout << "hval for left " << leftNode->hValue << endl;
-				cout << "havl for right" << rightNode->hValue << endl;
-
-
-				_pq->push(leftNode);
-				_pq->push(rightNode);
-
-				currentNode = _pq->top();
-				_pq->pop();
-				cout << "curent " << currentNode->hValue << endl;
-				
-
-				lowestHVal = currentNode->hValue;
-				lowestNode.hValue = lowestHVal;
-				cout << lowestHVal << endl;
-				//lowestNode = currentNode;
-				
-				copyMap(currentNode->map, lowestNode.map);*/
-/*
-				int testing[10][10] = {{-1, -1, -1, -1, 1, -1, -1, 1, -1, -1},
-				{-1 ,-1, -1, -1, -1, 1, 1, -1, -1, -1},
-				{-1, -1, -1, -1, -1, -1 ,1 ,-1 ,-1, 1},
-				{-1, -1 ,-1 ,-1 ,-1 ,-1 ,-1 ,1 ,0 ,0},
-				{1, -1, -1, -1, -1, 1, -1, -1, -1 ,-1},
-				{-1, 1, -1, -1, 1 ,-1 ,-1 ,-1 ,-1 ,-1},
-				{-1, 1, 1, -1, -1, -1, -1, -1, -1, -1},
-				{1, -1, -1,1, -1, -1, -1, -1, 0, -1},
-				{-1, -1, -1, 0, -1, -1, -1, 0, -1, 0},
-				{-1, -1, 1,0, -1, -1, -1, -1, 0,-1}};
-
-				int **ptr;
-				//Assign first dimension
-				ptr = new int*[length];
-				//Assign second dimension
-				for(int i = 0; i < length; i++)
-					ptr[i] = new int[length];
-
-				for(int i=0;i<length;i++)
-				{
-					for(int j=0;j<length;j++)
-					{
-						ptr[i][j]=testing[i][j];		
-					}		
-				}
-
-				verify(ptr);
-				*/
-
-				int ran = 0;
-				while(_pq->empty() != true)
-				{
-					ran++;
-					Node* currentNode = _pq->top();
-					_pq->pop();
-					popChildren(currentNode);
-				}
+		popChildren(currentNode);
+	}
 
 
 }
@@ -507,7 +423,6 @@ void Tsp::verify(int **map)
 			//and less then cities - 1.
 			//meaning that if there are 6 Cities: A,B,C,D,E,F,
 			//then if we have C A B D C, this doesn't cover all the cities. This shouldn't happen.
-	 //cout << "here!!" << endl;
 
 			if(numberOfCompletedRow > 0 && numberOfCompletedRow< length-1)
 			{
