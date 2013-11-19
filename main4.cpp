@@ -6,8 +6,25 @@
 #include "tsp.h"
 #include <mpi.h>
 #include <math.h>
+#include <stdio.h>
+#include <sys/timeb.h>
 
 using namespace std;
+
+int getMilliCount(){
+	timeb tb;
+	ftime(&tb);
+	int nCount = tb.millitm + (tb.time & 0xfffff) * 1000;
+	return nCount;
+}
+
+int getMilliSpan(int nTimeStart){
+	int nSpan = getMilliCount() - nTimeStart;
+	if(nSpan < 0)
+		nSpan += 0x100000 * 1000;
+	return nSpan;
+}
+
 
 int main(int argc, char* argv[]){
 
@@ -45,6 +62,11 @@ int main(int argc, char* argv[]){
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
 
 	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
+	int start, end;
+	if(myid == 0)
+	{
+		start = getMilliCount();
+	}
 	MPI_Request req, send_req[numprocs], recv_req[numprocs];
 	MPI_Status stat[numprocs], stats;
 
@@ -257,6 +279,8 @@ int main(int argc, char* argv[]){
 		
 		cout << "Last !" << endl;
 		tsp->printResult();	
+		end=getMilliSpan(start);
+		printf("Elapsed time = %u millisecond\n", end);
 	}	
 
 	MPI_Finalize();

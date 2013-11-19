@@ -4,6 +4,7 @@
 #include <queue>
 #include "CompareNode.h"
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -35,12 +36,26 @@ void Tsp::printResult()
 		cout << endl;
 	}
 
-	string s = "";
+	stringstream result2;
+	int numberOfRow = length;
+	int previousRow =0;
+	int currentRow =0;
+	while(numberOfRow != 0)
+	{
+		for(int g=0;g<length;g++)
+		{
+			if(lowestNode.map[currentRow][g] == 1 && previousRow != g)
+			{
+				result2 << g+1 << " ";
+				previousRow = currentRow;
+				currentRow = g;
+				numberOfRow--;
+				break;
+			}			
+		}
+	}
 
-
-
-
-
+	cout << result2.str() << endl;
 	cout << "cost: " << lowestNode.hValue << endl;
 	
 }
