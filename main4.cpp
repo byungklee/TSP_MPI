@@ -179,7 +179,7 @@ int main(int argc, char* argv[]){
 			for(int c=0; c<length;c++)
 				temp2[c] = new int[length];
 			
-			cout << "receiving " << myid << " from " << stats.MPI_SOURCE << endl;
+			//cout << "receiving " << myid << " from " << stats.MPI_SOURCE << endl;
 			for(int row=0;row<length;row++)
 			{
 				for(int col=0;col<length;col++)
@@ -189,14 +189,14 @@ int main(int argc, char* argv[]){
 				}			
 				
 			}
-			cout << tsp->hFunc(temp2) << endl;
+			//cout << tsp->hFunc(temp2) << endl;
 
-			cout << "compare " << myid << ": "<< tsp->getLowestNode().hValue << " and " << stats.MPI_SOURCE<< ": " << tsp->hFunc(temp2) << endl;
+			//cout << "compare " << myid << ": "<< tsp->getLowestNode().hValue << " and " << stats.MPI_SOURCE<< ": " << tsp->hFunc(temp2) << endl;
 			if(tsp->hFunc(temp2) < tsp->getLowestNode().hValue)
 			{			
-				cout << "take " << tsp->hFunc(temp2) << endl;
+			//	cout << "take " << tsp->hFunc(temp2) << endl;
 				tsp->setLowestNode(temp2);	
-				cout << "confirm " << tsp->getLowestHVal() << endl;
+			//	cout << "confirm " << tsp->getLowestHVal() << endl;
 			}
 			 
 			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &stats);
@@ -216,7 +216,7 @@ int main(int argc, char* argv[]){
 				for(int c=0;c<numprocs;c++)
 				{
 					
-					cout << "SENDING " << myid << " " << currentNode-> hValue << endl;
+					//cout << "SENDING " << myid << " " << currentNode-> hValue << endl;
 					for(int row=0;row<length;row++)
 					{
 						for(int col=0;col<length;col++)
@@ -254,7 +254,7 @@ int main(int argc, char* argv[]){
 			for(int c=0; c<length;c++)
 				temp2[c] = new int[length];
 			
-			cout << "receiving " << myid << " from " << stats.MPI_SOURCE << endl;
+			//cout << "receiving " << myid << " from " << stats.MPI_SOURCE << endl;
 			for(int row=0;row<length;row++)
 			{
 				for(int col=0;col<length;col++)
@@ -263,21 +263,21 @@ int main(int argc, char* argv[]){
 				}			
 			}
 
-			cout << tsp->hFunc(temp2) << endl;
+			//cout << tsp->hFunc(temp2) << endl;
 
-			cout << "compare " << myid << ": "<< tsp->getLowestNode().hValue << " and " << stats.MPI_SOURCE<< ": " << tsp->hFunc(temp2) << endl;
+			//cout << "compare " << myid << ": "<< tsp->getLowestNode().hValue << " and " << stats.MPI_SOURCE<< ": " << tsp->hFunc(temp2) << endl;
 			if(tsp->hFunc(temp2) < tsp->getLowestNode().hValue)
 			{			
-				cout << "take " << tsp->hFunc(temp2) << endl;
+			//	cout << "take " << tsp->hFunc(temp2) << endl;
 				tsp->setLowestNode(temp2);	
-				cout << "confirm " << tsp->getLowestHVal() << endl;
+			//	cout << "confirm " << tsp->getLowestHVal() << endl;
 			}
 			 
 			MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &stats);
 
 		}	
 		
-		cout << "Last !" << endl;
+		cout << "Result !" << endl;
 		tsp->printResult();	
 		end=getMilliSpan(start);
 		printf("Elapsed time = %u millisecond\n", end);
