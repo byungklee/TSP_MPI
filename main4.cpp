@@ -13,6 +13,8 @@
 
 using namespace std;
 
+
+//for timer
 int getMilliCount(){
 	timeb tb;
 	ftime(&tb);
@@ -29,7 +31,9 @@ int getMilliSpan(int nTimeStart){
 
 
 int main(int argc, char* argv[]){
-
+	
+	
+	//initialization of the map
 	/*int c[10][10]={{-1,5,7,6,1,4,5,3,7,7},
 					{5,-1,9,9,8,1,4,6,8,9},
 					{7,9,-1,10,2,9,4,5,5,6},
@@ -55,6 +59,7 @@ int main(int argc, char* argv[]){
 									 {68, 43, 15, 39, 64, 16, 79,  2, 75, 32, 92, -1, 44},
 									 {98,  9, 10, 22,  6, 40, 22, 87, 45, 66, 25, 44, -1}};
 
+	//variables
 	int length = sizeof(*c) / sizeof(int);				
 
 	int myid, numprocs, temp[length][length];	
@@ -64,6 +69,7 @@ int main(int argc, char* argv[]){
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
 
 	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
+	
 	int start, end;
 	if(myid == 0)
 	{
@@ -91,7 +97,8 @@ int main(int argc, char* argv[]){
 	}
 	
 	Tsp *tsp = new Tsp(node,pq, length); //map, pq, and length
-
+	
+	//processor 0 assigns works to other processors
 	if(myid==0)
 	{
 		node = new Node; //origin condition;
@@ -147,7 +154,8 @@ int main(int argc, char* argv[]){
 		}		
 
 	}
-
+	
+	//other processors receive the work.
 	if(myid != 0)
 		MPI_Recv(&temp, length*length,MPI_INT, 0, 0, MPI_COMM_WORLD, 0);
 	
@@ -166,15 +174,17 @@ int main(int argc, char* argv[]){
 
 	node->hValue = tsp->hFunc(node->map);		
 	pq->push(node);
-
+	
+	//do the work
 	while(pq->empty() == false)
 	{
 	
 		int flag = 0;
+		//check their is a received a msg.
 		MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &stats);
 		while(flag == 1)
 		{
-			
+			//if their is a msg, recieve the msg, and compare with the lowest node, and insert if lower.
 
 			MPI_Recv(&temp, length*length,MPI_INT, stats.MPI_SOURCE, 0, MPI_COMM_WORLD, &stats);				
 			int **temp2 = new int*[length];
@@ -209,7 +219,7 @@ int main(int argc, char* argv[]){
 		Node* currentNode = pq->top();		
 		pq->pop();
 
-
+		//if final path, and lower than currentlowest, replace it, and send msg to other processors.
 		if(tsp->isFinal(currentNode->map))
 		{
 			
@@ -228,7 +238,7 @@ int main(int argc, char* argv[]){
 						}
 						
 					}
-
+					//non blocking send
 					MPI_Isend(&temp, length*length, MPI_INT, c, 0, MPI_COMM_WORLD, &send_req[c]);
 
 				}
@@ -241,13 +251,15 @@ int main(int argc, char* argv[]){
 	
 	}
 
-
+	//wait until all the processors finished working
 	MPI_Barrier(MPI_COMM_WORLD);
 	
+	//processor 0's work
 	if(myid == 0)
 	{	
 		int flag =0;
 		MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &stats);
+		//if there is a msg that isn't checked, then recieve and compare, replace if lower.
 		while(flag == 1)
 		{
 			
@@ -279,6 +291,7 @@ int main(int argc, char* argv[]){
 
 		}	
 		
+		//print out the result
 		cout << "Result !" << endl;
 		tsp->printResult();	
 		end=getMilliSpan(start);
