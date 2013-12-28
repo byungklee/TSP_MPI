@@ -1,3 +1,6 @@
+Author: Byung Lee
+Date: Fall 2013
+
 This project is TSP solved by c++ and openMPI.
 
 The machine requires openMPI installed.
