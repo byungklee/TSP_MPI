@@ -1,7 +1,7 @@
 Author: Byung Lee
 Date: Fall 2013
 
-This project is TSP solved by c++ and openMPI.
+This project is TSP solved by c++ and openMPI. The solution applies a parallel technique with message passing between nodes(different computers).
 
 The machine requires openMPI installed.
 
